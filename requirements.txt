@@ -3,4 +3,7 @@ beautifulsoup4>=4.12.0
 pyyaml>=6.0.1
 python-dotenv>=1.0.0
 urllib3>=2.0.0
-openai>=1.30.0
+# No heavy AI packages needed, direct REST API calls are used to support Python 3.8
+streamlit>=1.30.0
+watchdog>=2.0.0
+
