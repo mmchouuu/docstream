@@ -32,8 +32,8 @@ def main() -> None:
     throttle_ms = int(os.getenv("SYNC_THROTTLE_MS", "500"))
     max_retries = int(os.getenv("MAX_CONNECTION_RETRIES", "3"))
     
-    # OpenAI Credentials
-    ai_api_key = os.getenv("AI_API_KEY")
+    # OpenAI/Gemini Credentials
+    ai_api_key = os.getenv("AI_API_KEY") or os.getenv("API_KEY")
     vector_store_id = os.getenv("VECTOR_STORE_ID")
     assistant_id = os.getenv("ASSISTANT_ID")
     
