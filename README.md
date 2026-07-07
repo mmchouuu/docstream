@@ -21,16 +21,6 @@ py -m pip install -r requirements.txt
 
 ---
 
-## 🧠 Chunking & Embedding Strategy
-
-*   **Strategy:** *1-to-1 Document Grounding (Whole-Document Semantic Chunking)*
-*   **Rationale:** Since support articles on Zendesk are naturally short (average 300–800 words) and highly focused on a single topic, we treat **each clean Markdown article as a single cohesive semantic chunk**.
-*   **Gemini Context Advantage:** By leveraging Google Gemini's massive context window (1M+ tokens), uploading whole files via the Files API preserves 100% of the document's structure (like complete step-by-step guides, lists, and tables) without losing vital context at arbitrary token boundaries (which occurs in fixed-size token chunking).
-*   **Metrics:** The synchronization summary logs the count of synchronized files, where each file maps directly to a high-fidelity document chunk:
-    *   `Files Uploaded/Updated: X` (equivalent to X semantic document chunks embedded).
-
----
-
 ## 🚀 Running the Project Locally
 
 ### Step 1: Run Ingestion & Delta Sync
