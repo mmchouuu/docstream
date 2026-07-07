@@ -24,10 +24,10 @@ SYSTEM_PROMPT = """You are OptiBot, the customer-support bot for OptiSigns.com.
 def main() -> None:
     load_dotenv()
     
-    api_key = os.getenv("AI_API_KEY")
+    api_key = os.getenv("AI_API_KEY") or os.getenv("API_KEY")
     
     if not api_key:
-        logger.error("AI_API_KEY not found in .env file.")
+        logger.error("AI_API_KEY or API_KEY not found in env.")
         sys.exit(1)
         
     # Load state file to get active Gemini file names

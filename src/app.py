@@ -91,7 +91,7 @@ with st.sidebar:
     st.markdown('<div class="sidebar-header">Configuration & Status</div>', unsafe_allow_html=True)
     
     # 1. API Status
-    api_key = os.getenv("AI_API_KEY")
+    api_key = os.getenv("AI_API_KEY") or os.getenv("API_KEY")
     if api_key:
         st.markdown('API Status: <span class="status-connected">● Active (Gemini)</span>', unsafe_allow_html=True)
     else:
