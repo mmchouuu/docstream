@@ -66,8 +66,11 @@ To build and run the daily sync job as a container:
 # Build the Docker image
 docker build -t docstream-sync-job .
 
-# Run container (runs one sync cycle, exits with code 0)
+# Run container using local .env file (runs one sync cycle, exits with code 0)
 docker run --env-file .env docstream-sync-job
+
+# Or run by passing the API key environment variable directly:
+docker run -e AI_API_KEY="your-gemini-api-key" docstream-sync-job
 ```
 
 ---

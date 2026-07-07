@@ -62,8 +62,8 @@ def main() -> None:
             })
             
     # Initialize the generative model
-    logger.info("Configuring Gemini Model...")
-    model_name = "gemini-flash-latest"
+    logger.info("Configured Gemini model 'gemini-2.5-flash' to avoid rate limit/503 errors.")
+    model_name = "gemini-2.5-flash"
     
     print("\n" + "="*50)
     print("🤖 Welcome to OptiBot Interactive Terminal Chat!")

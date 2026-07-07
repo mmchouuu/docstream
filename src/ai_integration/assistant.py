@@ -26,5 +26,5 @@ class AIAssistantManager:
         For Gemini, Assistant configurations are initialized inline.
         This method returns the model identifier 'gemini-1.5-flash'.
         """
-        logger.info("Configured Gemini model 'gemini-flash-latest' with verbatim instructions.")
-        return "gemini-flash-latest"
+        logger.info("Configured Gemini model 'gemini-1.5-flash' with verbatim instructions.")
+        return "gemini-1.5-flash"
