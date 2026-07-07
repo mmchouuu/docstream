@@ -32,12 +32,20 @@ py -m src.main
 *   **Crawler Fallback:** BS4 crawls HTML page directly if API is blocked.
 *   **Delta Checks:** Re-running only uploads `added` or `updated` documents.
 
-### Step 2: Start Streamlit Chat Interface
-Test the grounding assistant in a web interface:
+### Step 2: Start Chat Interface (Web UI or Terminal CLI)
+You can test the grounding assistant in two ways:
+
+#### Option A: Web User Interface (Streamlit)
 ```bash
 py -m streamlit run src/app.py
 ```
 Open **`http://localhost:8501`** to chat with OptiBot. You can select model types (like `gemini-1.5-flash-latest` or `gemini-2.0-flash`) in the sidebar to bypass overload errors.
+
+#### Option B: Interactive Terminal (CLI Mode)
+```bash
+py -m src.test_chat
+```
+This launches a text-based chat session directly in your terminal. Type your question and press Enter. Type `exit` or `quit` to end the session.
 
 ---
 
@@ -66,3 +74,16 @@ You can easily schedule the Docker container on **Railway** or **Render**:
    * `AI_API_KEY`: your Gemini API key.
    * `HELP_CENTER_API_URL`: `https://support.optisigns.com/api/v2/help_center`
 5. Railway will automatically build using the `Dockerfile` and run the script daily.
+
+---
+
+## 📸 Verification Screenshots
+
+### 1. Grounded Chatbot (Streamlit Web UI)
+![Streamlit Chat UI](images/streamlit_chat.png)
+
+### 2. Interactive Terminal Chat (CLI Mode)
+![CLI Chat UI](images/cli_chat.png)
+
+### 3. Delta Sync Console Log
+![Delta Sync Console Output](images/delta_sync_terminal.png)
