@@ -19,7 +19,7 @@ SYSTEM_PROMPT = """You are OptiBot, the customer-support bot for OptiSigns.com.
 • Tone: helpful, factual, concise.
 • Only answer using the uploaded docs.
 • Max 5 bullet points; else link to the doc.
-• Cite up to 3 "Article URL:" lines per reply."""
+• Cite up to 3 "Article URL:" lines per reply. Place each URL citation on a new line prefixed with a bullet point."""
 
 def main() -> None:
     load_dotenv()
@@ -46,7 +46,7 @@ def main() -> None:
         sys.exit(1)
         
     articles = state.get("articles", {})
-    parts = []
+    file_parts = []
     
     logger.info("Retrieving file mappings from state database...")
     for art_id, art_meta in articles.items():
@@ -54,7 +54,7 @@ def main() -> None:
         if file_id:
             # Reconstruct the file URI deterministically
             file_uri = f"https://generativelanguage.googleapis.com/v1beta/{file_id}"
-            parts.append({
+            file_parts.append({
                 "file_data": {
                     "mime_type": "text/markdown",
                     "file_uri": file_uri
@@ -65,52 +65,72 @@ def main() -> None:
     logger.info("Configuring Gemini Model...")
     model_name = "gemini-flash-latest"
     
-    query = "How do I add a YouTube video?"
-    logger.info(f"Sending grounded query to Gemini Flash Latest: '{query}'")
-    parts.append({"text": query})
+    print("\n" + "="*50)
+    print("🤖 Welcome to OptiBot Interactive Terminal Chat!")
+    print("Type your support question below and press Enter.")
+    print("Type 'exit' or 'quit' to close the chat.")
+    print("="*50 + "\n")
     
-    # 3. Call generateContent REST API
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
-    payload = {
-        "contents": [
-            {
-                "parts": parts
-            }
-        ],
-        "systemInstruction": {
-            "parts": [
-                {
-                    "text": SYSTEM_PROMPT
-                }
-            ]
-        }
-    }
-    
-    headers = {"Content-Type": "application/json"}
-    
-    try:
-        response = requests.post(url, headers=headers, json=payload, timeout=30)
-        if response.status_code != 200:
-            logger.error(f"Gemini API generation failed (status {response.status_code}): {response.text}")
-            sys.exit(1)
+    while True:
+        try:
+            query = input("\nYou: ").strip()
+        except (KeyboardInterrupt, EOFError):
+            print("\nExiting. Goodbye!")
+            break
             
-        result = response.json()
+        if not query:
+            continue
+            
+        if query.lower() in ["exit", "quit"]:
+            print("Exiting. Goodbye!")
+            break
+            
+        print("OptiBot is thinking...")
         
-        # Parse output text
-        candidates = result.get("candidates", [])
-        if candidates:
-            text_response = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
-            print("\n" + "="*50)
-            print("OPTIBOT RESPONSE:")
-            print("="*50)
-            print(text_response)
-            print("="*50 + "\n")
-        else:
-            logger.error(f"No response text in model candidates. Full response: {result}")
+        # Prepare combined parts
+        combined_parts = file_parts + [{"text": query}]
+        
+        # 3. Call generateContent REST API
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+        payload = {
+            "contents": [
+                {
+                    "parts": combined_parts
+                }
+            ],
+            "systemInstruction": {
+                "parts": [
+                    {
+                        "text": SYSTEM_PROMPT
+                    }
+                ]
+            }
+        }
+        
+        headers = {"Content-Type": "application/json"}
+        
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=30)
+            if response.status_code != 200:
+                logger.error(f"Gemini API generation failed (status {response.status_code}): {response.text}")
+                continue
+                
+            result = response.json()
             
-    except Exception as e:
-        logger.error(f"Failed to generate content: {e}")
-        sys.exit(1)
+            # Parse output text
+            candidates = result.get("candidates", [])
+            if candidates:
+                text_response = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                print("\n" + "="*50)
+                print("OPTIBOT RESPONSE:")
+                print("="*50)
+                print(text_response)
+                print("="*50 + "\n")
+            else:
+                logger.error(f"No response text in model candidates. Full response: {result}")
+                
+        except Exception as e:
+            logger.error(f"Failed to generate content: {e}")
 
 if __name__ == "__main__":
     main()

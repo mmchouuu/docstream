@@ -52,4 +52,4 @@ articles/
 db.sqlite3
 state.json
 
-/agent
+agent/
